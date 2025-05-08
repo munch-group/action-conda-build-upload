@@ -201,7 +201,7 @@ runs:
         du -sh $HOST_PACKAGE
         echo "::endgroup::"
         echo "::group::Converting package for other platforms"
-        conda_convert_command="conda convert $HOST_PACKAGE -o $out_dir ${{ inputs.conda_convert_args }}"
+        conda_convert_command="cph $HOST_PACKAGE .tar.bz2 && conda convert $(basename $HOST_PACKAGE .conda).tar.bz2 -o $out_dir ${{ inputs.conda_convert_args }}"
         if "${{ inputs.platform_all }}"; then
           platforms_options+=" -p all"
         fi
