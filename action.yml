@@ -204,9 +204,14 @@ runs:
 
         # conda_convert_command="conda convert $HOST_PACKAGE -o $out_dir ${{ inputs.conda_convert_args }}"
         # HACK UNTIL CONDA CONVERT CAN HANDLE .CONDA FORMAT AGAIN...
-        HOST_PACKAGE_TAR_BZ2="$(dirname $HOST_PACKAGE)/$(basename $HOST_PACKAGE .conda).tar.bz2"
+        if [ -z ${HOST_PACKAGE##*.conda} ]; then
+          HOST_PACKAGE_TAR_BZ2="$(dirname $HOST_PACKAGE)/$(basename $HOST_PACKAGE .conda).tar.bz2"
+          conda_convert_command="cph transmute --out-folder $(dirname $HOST_PACKAGE) $HOST_PACKAGE .tar.bz2 && conda convert $HOST_PACKAGE_TAR_BZ2 -o $out_dir ${{ inputs.conda_convert_args }}"
+        else
+          HOST_PACKAGE_TAR_BZ2="$(dirname $HOST_PACKAGE)/$(basename $HOST_PACKAGE .tgz).tar.bz2"
+          conda_convert_command="gunzip -c $HOST_PACKAGE | bzip2 -c > $HOST_PACKAGE_TAR_BZ2 && conda convert $HOST_PACKAGE_TAR_BZ2 -o $out_dir ${{ inputs.conda_convert_args }}"
+        fi
         echo "HOST_PACKAGE_TAR_BZ2=$HOST_PACKAGE_TAR_BZ2" >> "$GITHUB_OUTPUT"
-        conda_convert_command="cph transmute --out-folder $(dirname $HOST_PACKAGE) $HOST_PACKAGE .tar.bz2 && conda convert $HOST_PACKAGE_TAR_BZ2 -o $out_dir ${{ inputs.conda_convert_args }}"
 
         if "${{ inputs.platform_all }}"; then
           platforms_options+=" -p all"
