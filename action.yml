@@ -186,7 +186,7 @@ runs:
       run: |
         echo "::group::Building conda package for host platform"
         out_dir=`mktemp -d -t compilation-XXXXXXXXXX`
-        echo "out_dir=$out_dir" >> $GITHUB_OUTPUT
+        echo "out_dir=$out_dir" >> "$GITHUB_OUTPUT"
         if "${{ inputs.mambabuild }}"; then
           build_function="mambabuild"
         else
@@ -196,17 +196,17 @@ runs:
         echo "$conda_build_command"
         eval "$conda_build_command"
         HOST_PACKAGE=$(eval "$conda_build_command --output")
-        echo "HOST_PACKAGE=$HOST_PACKAGE" >> $GITHUB_OUTPUT        
+        echo "HOST_PACKAGE=$HOST_PACKAGE" >> "$GITHUB_OUTPUT"
         echo "Package for host platform compiled as $HOST_PACKAGE"
         du -sh $HOST_PACKAGE
         echo "::endgroup::"
         echo "::group::Converting package for other platforms"
 
-        # conda_convert_command="conda convert $HOST_PACKAGE -o $out_dir ${{ inputs.conda_convert_args }}"
-        # HACK UNTIL CONDA CONVERT CAN HANDLE .CONDA FORMAT AGAIN...
-        HOST_PACKAGE_TAR_BZ2="$(dirname $HOST_PACKAGE)/$(basename $HOST_PACKAGE .conda).tar.bz2"
-        echo "HOST_PACKAGE_TAR_BZ2=$HOST_PACKAGE_TAR_BZ2" >> $GITHUB_OUTPUT
-        conda_convert_command="cph transmute --out-folder $(dirname $HOST_PACKAGE) $HOST_PACKAGE .tar.bz2 && conda convert $HOST_PACKAGE_TAR_BZ2 -o $out_dir ${{ inputs.conda_convert_args }}"
+        conda_convert_command="conda convert $HOST_PACKAGE -o $out_dir ${{ inputs.conda_convert_args }}"
+        # # HACK UNTIL CONDA CONVERT CAN HANDLE .CONDA FORMAT AGAIN...
+        # HOST_PACKAGE_TAR_BZ2="$(dirname $HOST_PACKAGE)/$(basename $HOST_PACKAGE .conda).tar.bz2"
+        # echo "HOST_PACKAGE_TAR_BZ2=$HOST_PACKAGE_TAR_BZ2" >> "$GITHUB_OUTPUT"
+        # conda_convert_command="cph transmute --out-folder $(dirname $HOST_PACKAGE) $HOST_PACKAGE .tar.bz2 && conda convert $HOST_PACKAGE_TAR_BZ2 -o $out_dir ${{ inputs.conda_convert_args }}"
 
         if "${{ inputs.platform_all }}"; then
           platforms_options+=" -p all"
@@ -281,6 +281,6 @@ runs:
           eval "$command"
           paths+=($package_path)
         done
-        echo "paths=${paths[@]}" >> $GITHUB_OUTPUT 
+        echo "paths=${paths[@]}" >> "$GITHUB_OUTPUT"
         echo "::endgroup::"
 
