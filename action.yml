@@ -202,11 +202,11 @@ runs:
         echo "::endgroup::"
         echo "::group::Converting package for other platforms"
 
-        conda_convert_command="conda convert $HOST_PACKAGE -o $out_dir ${{ inputs.conda_convert_args }}"
-        # # HACK UNTIL CONDA CONVERT CAN HANDLE .CONDA FORMAT AGAIN...
-        # HOST_PACKAGE_TAR_BZ2="$(dirname $HOST_PACKAGE)/$(basename $HOST_PACKAGE .conda).tar.bz2"
-        # echo "HOST_PACKAGE_TAR_BZ2=$HOST_PACKAGE_TAR_BZ2" >> $GITHUB_OUTPUT
-        # conda_convert_command="cph transmute --out-folder $(dirname $HOST_PACKAGE) $HOST_PACKAGE .tar.bz2 && conda convert $HOST_PACKAGE_TAR_BZ2 -o $out_dir ${{ inputs.conda_convert_args }}"
+        # conda_convert_command="conda convert $HOST_PACKAGE -o $out_dir ${{ inputs.conda_convert_args }}"
+        # HACK UNTIL CONDA CONVERT CAN HANDLE .CONDA FORMAT AGAIN...
+        HOST_PACKAGE_TAR_BZ2="$(dirname $HOST_PACKAGE)/$(basename $HOST_PACKAGE .conda).tar.bz2"
+        echo "HOST_PACKAGE_TAR_BZ2=$HOST_PACKAGE_TAR_BZ2" >> $GITHUB_OUTPUT
+        conda_convert_command="cph transmute --out-folder $(dirname $HOST_PACKAGE) $HOST_PACKAGE .tar.bz2 && conda convert $HOST_PACKAGE_TAR_BZ2 -o $out_dir ${{ inputs.conda_convert_args }}"
 
         if "${{ inputs.platform_all }}"; then
           platforms_options+=" -p all"
@@ -271,9 +271,9 @@ runs:
         export ANACONDA_API_TOKEN=${{ inputs.token }}
         SHORT_SHA="$(git rev-parse --short $GITHUB_SHA)"
 
-        package_paths=$(find ${{ steps.packages-compilation.outputs.out_dir }} -type f -name $(basename ${{ steps.packages-compilation.outputs.HOST_PACKAGE }}))        
-        # # HACK UNTIL CONDA CONVERT CAN HANDLE .CONDA FORMAT AGAIN...
-        # package_paths=$(find ${{ steps.packages-compilation.outputs.out_dir }} -type f -name $(basename ${{ steps.packages-compilation.outputs.HOST_PACKAGE_TAR_BZ2 }}))        
+        # package_paths=$(find ${{ steps.packages-compilation.outputs.out_dir }} -type f -name $(basename ${{ steps.packages-compilation.outputs.HOST_PACKAGE }}))        
+        # HACK UNTIL CONDA CONVERT CAN HANDLE .CONDA FORMAT AGAIN...
+        package_paths=$(find ${{ steps.packages-compilation.outputs.out_dir }} -type f -name $(basename ${{ steps.packages-compilation.outputs.HOST_PACKAGE_TAR_BZ2 }}))        
 
         for package_path in $package_paths; do
           command="anaconda upload --user ${{ inputs.user }} $force --label $label ${{ inputs.anaconda_upload_args }} $package_path"
