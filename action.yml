@@ -313,6 +313,6 @@ runs:
     #       eval "$command"
     #       paths+=($package_path)
     #     done
-        echo "paths=${paths[@]}" >> "$GITHUB_OUTPUT"
-        echo "::endgroup::"
+        # echo "paths=${paths[@]}" >> "$GITHUB_OUTPUT"
+        # echo "::endgroup::"
 
