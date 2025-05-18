@@ -284,9 +284,11 @@ runs:
         SHORT_SHA="$(git rev-parse --short $GITHUB_SHA)"
 
         package_paths=""
-        for path in "${{ steps.packages-compilation.outputs.HOST_PACKAGE }}"; do
-          echo "$path"
-          package_paths+=$(find ${{ steps.packages-compilation.outputs.out_dir }} -type f -name $(basename "$path"))
+        for p in "${{ steps.packages-compilation.outputs.HOST_PACKAGE }}"; do
+          package_paths_command="find ${{ steps.packages-compilation.outputs.out_dir }} -type f -name $(basename $p"
+          echo "$package_paths_command"
+          eval "$package_paths_command"
+          package_paths+=$("$package_paths_command")
         done
 
         # package_paths=$(find ${{ steps.packages-compilation.outputs.out_dir }} -type f -name $(basename ${{ steps.packages-compilation.outputs.HOST_PACKAGE }}))        
