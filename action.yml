@@ -193,7 +193,7 @@ runs:
           build_function="build"
         fi
 
-        conda_build_command="conda $build_function . --output-folder $out_dir ${{ inputs.conda_build_args }}"
+        conda_build_command="conda $build_function . --anaconda-upload --output-folder $out_dir ${{ inputs.conda_build_args }}"
         echo "$conda_build_command"
         eval "$conda_build_command"
         HOST_PACKAGE=$(eval "$conda_build_command --output")
