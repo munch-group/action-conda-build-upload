@@ -283,11 +283,10 @@ runs:
         export ANACONDA_API_TOKEN=${{ inputs.token }}
         SHORT_SHA="$(git rev-parse --short $GITHUB_SHA)"
 
-
+        package_paths=""
         for path in "$HOST_PACKAGE"; do
-          package_paths=$(find ${{ steps.packages-compilation.outputs.out_dir }} -type f -name $(basename "$path"))
           echo "$path"
-          package_paths+=($path)
+          package_paths+=$(find ${{ steps.packages-compilation.outputs.out_dir }} -type f -name $(basename "$path"))
         done
 
         # package_paths=$(find ${{ steps.packages-compilation.outputs.out_dir }} -type f -name $(basename ${{ steps.packages-compilation.outputs.HOST_PACKAGE }}))        
