@@ -193,6 +193,10 @@ runs:
           build_function="build"
         fi
 
+
+
+        export ANACONDA_API_TOKEN=${{ inputs.token }}
+        conda config --set anaconda_upload yes        
         conda_build_command="conda $build_function . --anaconda-upload --output-folder $out_dir ${{ inputs.conda_build_args }}"
         echo "$conda_build_command"
         eval "$conda_build_command"
@@ -202,6 +206,12 @@ runs:
         echo $HOST_PACKAGE
         echo EOF
         } >> "$GITHUB_OUTPUT"
+
+
+        
+
+
+
         
         # conda_build_command="conda $build_function . --no-anaconda-upload --output-folder $out_dir ${{ inputs.conda_build_args }}"
         # echo "$conda_build_command"
