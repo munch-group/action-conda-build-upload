@@ -278,7 +278,8 @@ runs:
         #   rm $HOST_PACKAGE
         #   echo "Package for host platform removed."
         # fi
-        # echo "::endgroup::"
+        
+        echo "::endgroup::"
     # - name: Packages uploading
     #   id: packages-uploading
     #   if: inputs.upload == 'true'
