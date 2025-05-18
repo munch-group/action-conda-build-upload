@@ -196,7 +196,14 @@ runs:
         echo "$conda_build_command"
         eval "$conda_build_command"
         HOST_PACKAGE=$(eval "$conda_build_command --output")
-        echo "HOST_PACKAGE=$HOST_PACKAGE" >> "$GITHUB_OUTPUT"
+        
+        # echo "HOST_PACKAGE=$HOST_PACKAGE" >> "$GITHUB_OUTPUT"
+        {
+        echo 'HOST_PACKAGE<<EOF'
+        echo $HOST_PACKAGE
+        echo EOF
+        } >> "$GITHUB_OUTPUT"
+
         echo "Package for host platform compiled as $HOST_PACKAGE"
         du -sh $HOST_PACKAGE
         echo "::endgroup::"
