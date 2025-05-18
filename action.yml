@@ -200,67 +200,67 @@ runs:
         echo "Package for host platform compiled as $HOST_PACKAGE"
         du -sh $HOST_PACKAGE
         echo "::endgroup::"
-        echo "::group::Converting package for other platforms"
+        # echo "::group::Converting package for other platforms"
 
-        # conda_convert_command="conda convert $HOST_PACKAGE -o $out_dir ${{ inputs.conda_convert_args }}"
-        # HACK UNTIL CONDA CONVERT CAN HANDLE .CONDA FORMAT AGAIN...
-        if [ -z ${HOST_PACKAGE##*.conda} ]; then
-          HOST_PACKAGE_TAR_BZ2="$(dirname $HOST_PACKAGE)/$(basename $HOST_PACKAGE .conda).tar.bz2"
-          conda_convert_command="cph transmute --out-folder $(dirname $HOST_PACKAGE) $HOST_PACKAGE .tar.bz2 && conda convert $HOST_PACKAGE_TAR_BZ2 -o $out_dir ${{ inputs.conda_convert_args }}"
-        else
-          HOST_PACKAGE_TAR_BZ2="$(dirname $HOST_PACKAGE)/$(basename $HOST_PACKAGE .tgz).tar.bz2"
-          conda_convert_command="gunzip -c $HOST_PACKAGE | bzip2 -c > $HOST_PACKAGE_TAR_BZ2 && conda convert $HOST_PACKAGE_TAR_BZ2 -o $out_dir ${{ inputs.conda_convert_args }}"
-        fi
-        echo "HOST_PACKAGE_TAR_BZ2=$HOST_PACKAGE_TAR_BZ2" >> "$GITHUB_OUTPUT"
+        # # conda_convert_command="conda convert $HOST_PACKAGE -o $out_dir ${{ inputs.conda_convert_args }}"
+        # # HACK UNTIL CONDA CONVERT CAN HANDLE .CONDA FORMAT AGAIN...
+        # if [ -z ${HOST_PACKAGE##*.conda} ]; then
+        #   HOST_PACKAGE_TAR_BZ2="$(dirname $HOST_PACKAGE)/$(basename $HOST_PACKAGE .conda).tar.bz2"
+        #   conda_convert_command="cph transmute --out-folder $(dirname $HOST_PACKAGE) $HOST_PACKAGE .tar.bz2 && conda convert $HOST_PACKAGE_TAR_BZ2 -o $out_dir ${{ inputs.conda_convert_args }}"
+        # else
+        #   HOST_PACKAGE_TAR_BZ2="$(dirname $HOST_PACKAGE)/$(basename $HOST_PACKAGE .tgz).tar.bz2"
+        #   conda_convert_command="gunzip -c $HOST_PACKAGE | bzip2 -c > $HOST_PACKAGE_TAR_BZ2 && conda convert $HOST_PACKAGE_TAR_BZ2 -o $out_dir ${{ inputs.conda_convert_args }}"
+        # fi
+        # echo "HOST_PACKAGE_TAR_BZ2=$HOST_PACKAGE_TAR_BZ2" >> "$GITHUB_OUTPUT"
 
-        if "${{ inputs.platform_all }}"; then
-          platforms_options+=" -p all"
-        fi
-        if "${{ inputs.platform_linux-64 }}"; then
-          platforms_options+=" -p linux-64"
-        fi
-        if "${{ inputs.platform_linux-32 }}"; then
-          platforms_options+=" -p linux-32"
-        fi
-        if "${{ inputs.platform_osx-64 }}"; then
-          platforms_options+=" -p osx-64"
-        fi
-        if "${{ inputs.platform_osx-arm64 }}"; then
-          platforms_options+=" -p osx-arm64"
-        fi
-        if "${{ inputs.platform_linux-ppc64 }}"; then
-          platforms_options+=" -p linux-ppc64"
-        fi
-        if "${{ inputs.platform_linux-ppc64le }}"; then
-          platforms_options+=" -p linux-ppc64le"
-        fi
-        if "${{ inputs.platform_linux-s390x }}"; then
-          platforms_options+=" -p linux-s390x"
-        fi
-        if "${{ inputs.platform_linux-armv6l }}"; then
-          platforms_options+=" -p linux-armv6l"
-        fi
-        if "${{ inputs.platform_linux-armv7l }}"; then
-          platforms_options+=" -p linux-armv7l"
-        fi
-        if "${{ inputs.platform_linux-aarch64 }}"; then
-          platforms_options+=" -p linux-aarch64"
-        fi
-        if "${{ inputs.platform_win-32 }}"; then
-          platforms_options+=" -p win-32"
-        fi
-        if "${{ inputs.platform_win-64 }}"; then
-          platforms_options+=" -p win-64"
-        fi
-        if [ -n "$platforms_options" ]; then
-            echo "${conda_convert_command}${platforms_options}"
-            eval "${conda_convert_command}${platforms_options}"
-        fi
-        if ! "${{ inputs.platform_host }}"; then
-          rm $HOST_PACKAGE
-          echo "Package for host platform removed."
-        fi
-        echo "::endgroup::"
+        # if "${{ inputs.platform_all }}"; then
+        #   platforms_options+=" -p all"
+        # fi
+        # if "${{ inputs.platform_linux-64 }}"; then
+        #   platforms_options+=" -p linux-64"
+        # fi
+        # if "${{ inputs.platform_linux-32 }}"; then
+        #   platforms_options+=" -p linux-32"
+        # fi
+        # if "${{ inputs.platform_osx-64 }}"; then
+        #   platforms_options+=" -p osx-64"
+        # fi
+        # if "${{ inputs.platform_osx-arm64 }}"; then
+        #   platforms_options+=" -p osx-arm64"
+        # fi
+        # if "${{ inputs.platform_linux-ppc64 }}"; then
+        #   platforms_options+=" -p linux-ppc64"
+        # fi
+        # if "${{ inputs.platform_linux-ppc64le }}"; then
+        #   platforms_options+=" -p linux-ppc64le"
+        # fi
+        # if "${{ inputs.platform_linux-s390x }}"; then
+        #   platforms_options+=" -p linux-s390x"
+        # fi
+        # if "${{ inputs.platform_linux-armv6l }}"; then
+        #   platforms_options+=" -p linux-armv6l"
+        # fi
+        # if "${{ inputs.platform_linux-armv7l }}"; then
+        #   platforms_options+=" -p linux-armv7l"
+        # fi
+        # if "${{ inputs.platform_linux-aarch64 }}"; then
+        #   platforms_options+=" -p linux-aarch64"
+        # fi
+        # if "${{ inputs.platform_win-32 }}"; then
+        #   platforms_options+=" -p win-32"
+        # fi
+        # if "${{ inputs.platform_win-64 }}"; then
+        #   platforms_options+=" -p win-64"
+        # fi
+        # if [ -n "$platforms_options" ]; then
+        #     echo "${conda_convert_command}${platforms_options}"
+        #     eval "${conda_convert_command}${platforms_options}"
+        # fi
+        # if ! "${{ inputs.platform_host }}"; then
+        #   rm $HOST_PACKAGE
+        #   echo "Package for host platform removed."
+        # fi
+        # echo "::endgroup::"
     - name: Packages uploading
       id: packages-uploading
       if: inputs.upload == 'true'
@@ -276,9 +276,9 @@ runs:
         export ANACONDA_API_TOKEN=${{ inputs.token }}
         SHORT_SHA="$(git rev-parse --short $GITHUB_SHA)"
 
-        # package_paths=$(find ${{ steps.packages-compilation.outputs.out_dir }} -type f -name $(basename ${{ steps.packages-compilation.outputs.HOST_PACKAGE }}))        
-        # HACK UNTIL CONDA CONVERT CAN HANDLE .CONDA FORMAT AGAIN...
-        package_paths=$(find ${{ steps.packages-compilation.outputs.out_dir }} -type f -name $(basename ${{ steps.packages-compilation.outputs.HOST_PACKAGE_TAR_BZ2 }}))        
+        package_paths=$(find ${{ steps.packages-compilation.outputs.out_dir }} -type f -name $(basename ${{ steps.packages-compilation.outputs.HOST_PACKAGE }}))        
+        # # HACK UNTIL CONDA CONVERT CAN HANDLE .CONDA FORMAT AGAIN...
+        # package_paths=$(find ${{ steps.packages-compilation.outputs.out_dir }} -type f -name $(basename ${{ steps.packages-compilation.outputs.HOST_PACKAGE_TAR_BZ2 }}))        
 
         for package_path in $package_paths; do
           command="anaconda upload --user ${{ inputs.user }} $force --label $label ${{ inputs.anaconda_upload_args }} $package_path"
